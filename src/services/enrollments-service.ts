@@ -15,7 +15,7 @@ type FormattedCep = {
 async function getAddressFromCEP(cep: string) {
   const result = await request.get(`${process.env.VIA_CEP_API}/${cep}/json/`);
 
-  if (result.data.erro && result.data.erro === true) throw invalidDataError('No address found!');
+  if (result.data.erro && result.data.erro === 'true') throw invalidDataError('No address found!');
 
   const { logradouro, complemento, bairro, localidade, uf } = result.data as FormattedCep;
 
@@ -26,8 +26,7 @@ async function getAddressFromCEP(cep: string) {
 
 async function getOneWithAddressByUserId(userId: number): Promise<GetOneWithAddressByUserIdResult> {
   const enrollmentWithAddress = await enrollmentRepository.findWithAddressByUserId(userId);
-
-  if (!enrollmentWithAddress) throw notFoundError();
+  if (!enrollmentWithAddress) throw invalidDataError("Enrollment doesn't exist!");
 
   const [firstAddress] = enrollmentWithAddress.Address;
   const address = getFirstAddress(firstAddress);
