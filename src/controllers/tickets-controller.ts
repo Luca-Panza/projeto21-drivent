@@ -1,22 +1,24 @@
 import { Response } from 'express';
 import httpStatus from 'http-status';
-import ticketsService from '@/services/tickets-service';
 import { AuthenticatedRequest } from '@/middlewares';
-import { CreateTicket } from '@/repositories/tickets-repository';
+import { ticketsService } from '@/services';
+import { InputTicketBody } from '@/protocols';
 
 export async function getTicketTypes(req: AuthenticatedRequest, res: Response) {
-  const result = await ticketsService.getTicketTypes();
-  res.status(httpStatus.OK).send(result);
+  const ticketTypes = await ticketsService.findTicketTypes();
+  return res.status(httpStatus.OK).send(ticketTypes);
 }
 
-export async function getTickets(req: AuthenticatedRequest, res: Response) {
-  const result = await ticketsService.getTickets(req.userId);
-  res.status(httpStatus.OK).send(result);
+export async function getTicket(req: AuthenticatedRequest, res: Response) {
+  const { userId } = req;
+  const ticket = await ticketsService.getTicketByUserId(userId);
+  res.status(httpStatus.OK).send(ticket);
 }
 
 export async function createTicket(req: AuthenticatedRequest, res: Response) {
-  const { ticketTypeId } = req.body as CreateTicket;
+  const { userId } = req;
+  const { ticketTypeId } = req.body as InputTicketBody;
 
-  const result = await ticketsService.createTicket(req.userId, ticketTypeId);
-  return res.status(httpStatus.CREATED).send(result);
+  const ticket = await ticketsService.createTicket(userId, ticketTypeId);
+  return res.status(httpStatus.CREATED).send(ticket);
 }
