@@ -31,14 +31,8 @@ export type CEP = {
 
 export type CreateTicketParams = Omit<Ticket, 'id' | 'createdAt' | 'updatedAt'>;
 
-export type CreateBookingParams = Omit<Booking, 'id' | 'createdAt' | 'updatedAt'>;
-
 export type InputTicketBody = {
   ticketTypeId: number;
-};
-
-export type InputBookingBody = {
-  roomId: number;
 };
 
 export type CardPaymentParams = {
@@ -55,3 +49,10 @@ export type InputPaymentBody = {
 };
 
 export type PaymentParams = Omit<Payment, 'id' | 'createdAt' | 'updatedAt'>;
+
+export type InputBookingBody = {
+  roomId: number;
+};
+
+export type CreateBookingParams = Omit<Booking, 'id' | 'createdAt' | 'updatedAt'>;
+export type UpdateBookingParams = Omit<Booking, 'createdAt' | 'updatedAt'>;

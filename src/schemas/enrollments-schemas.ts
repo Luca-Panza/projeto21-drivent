@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { getStates, isValidCEP, isValidCPF, isValidMobilePhone } from '@brazilian-utils/brazilian-utils';
+import { getStates, isValidCEP, isValidCPF, isValidLandlinePhone, isValidMobilePhone } from '@brazilian-utils/brazilian-utils';
 import { CreateOrUpdateEnrollmentWithAddress } from '@/services';
 
 const cpfValidationSchema = Joi.string().length(11).custom(joiCpfValidation).required();
@@ -51,7 +51,9 @@ function joiMobilePhoneValidation(value: string, helpers: Joi.CustomHelpers<stri
   if (!value) return value;
 
   if (!isValidMobilePhone(value)) {
-    return helpers.error('any.invalid');
+    if (!isValidLandlinePhone(value)) {
+      return helpers.error('any.invalid');
+    }
   }
 
   return value;
